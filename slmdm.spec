@@ -4,7 +4,7 @@ Summary:	Smart Link soft modem drivers
 Summary(pl):	Sterowniki do modemów programowych Smart Link
 Name:		slmdm
 Version:	2.7.14
-%define	rel	0.1
+%define	rel	0.2
 Release:	%{rel}
 License:	BSD almost without source
 Vendor:		Smart Link Ltd.
@@ -14,6 +14,7 @@ Group:		Base/Kernel
 # http://www.smlink.com/download/Linux/
 Source0:	http://www.smlink.com/download/Linux/%{name}-%{version}.tar.gz
 Patch0:		%{name}-2.4.20.patch
+Patch1:		%{name}-turnon-devfs.patch
 URL:		http://linmodems.technion.ac.il/resources.html
 %{!?_without_dist_kernel:BuildRequires:	kernel-headers}
 BuildRequires:	%{kgcc_package}
@@ -89,6 +90,7 @@ pakiet zawiera sterownik dla modemów USB opartych  na SmartUSB56.
 %if %(grep -q iso_packet_descriptor_t %{_kernelsrcdir}/include/linux/usb.h ; echo $?)
 %patch -p1
 %endif
+%patch1 -p1
 
 %build
 echo "[%{_kernel_ver}]"
