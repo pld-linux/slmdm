@@ -96,8 +96,6 @@ CF="-Wall %{rpmcflags} -fomit-frame-pointer"
 	CC="%{kgcc}" \
 	CFLAGS="${CF} -D__KERNEL__ -DMODULE -DEXPORT_SYMTAB -I. -I${KI} ${MV}"
 
-#%{__make} KERNEL_INCLUDES=%{_kernelsrcdir}
-
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},/lib/modules/%{_kernel_ver}/misc,%{_sysconfdir}}
