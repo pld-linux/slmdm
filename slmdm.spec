@@ -19,7 +19,7 @@ Patch1:		%{name}-turnon-devfs.patch
 URL:		http://linmodems.technion.ac.il/resources.html
 %{!?_without_dist_kernel:BuildRequires:	kernel-headers}
 BuildRequires:	%{kgcc_package}
-BuildRequires:  rpmbuild(macros) >= 1.118
+BuildRequires:	rpmbuild(macros) >= 1.118
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
