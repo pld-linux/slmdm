@@ -8,7 +8,7 @@ Release:	0.2
 License:	Smart Link Ltd.
 Group:		Applications/Communications
 Source0:	slmdm-%{version}.tar.gz
-URL:		http://linmodems.technion.ac.al/resources.html
+URL:		http://linmodems.technion.ac.il/resources.html
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
