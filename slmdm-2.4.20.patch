@@ -1,0 +1,29 @@
+--- slmdm-2.7.9/usb_st7554.c.orig	Sun Jan 26 15:53:48 2003
++++ slmdm-2.7.9/usb_st7554.c	Thu Mar 13 14:08:19 2003
+@@ -534,7 +534,7 @@
+ {
+ 	struct st7554_modem_state *s = u->context;
+ 	struct dmabuf *db = &s->mo.dma;
+-	iso_packet_descriptor_t *p;
++	struct iso_packet_descriptor *p;
+ 	unsigned long flags;
+ 	int i;
+ 
+@@ -619,7 +619,7 @@
+ static void mi_complete(struct urb *u)
+ {
+ 	struct st7554_modem_state *s = u->context;
+-	iso_packet_descriptor_t *p;
++	struct iso_packet_descriptor *p;
+ 	unsigned long flags;
+ 	int i;
+ 
+@@ -660,7 +660,7 @@
+ static void mi_setup_complete(struct urb *u)
+ {
+ 	struct st7554_modem_state *s = u->context;
+-	iso_packet_descriptor_t *p;
++	struct iso_packet_descriptor *p;
+ 	unsigned long flags;
+ 	int i;
+ 
