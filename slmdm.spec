@@ -1,13 +1,13 @@
 # NOTE: no SMP drivers for now - I don't know if these binaries would work?
 # TODO: test it on SMP and add SMP modules or update above comment
 Summary:	Smart Link Soft Modem.
-Name:		slmdm
+Name:		kernel-char-slmdm
 Vendor:		Smart Link Ltd.
 Version:	2.7.9
-Release:	0.1
+Release:	0.2
 License:	Smart Link Ltd.
 Group:		Applications/Communications
-Source0:	%{name}-%{version}.tar.gz
+Source0:	slmdm-%{version}.tar.gz
 URL:		http://linmodems.technion.ac.al/resources.html
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -17,8 +17,8 @@ SmartLink Software Modem.
 %package amr
 Summary:	Smart Link Soft Modem AMR/PCI component.
 Group:		Applications/Communications
-Requires:	slmdm
-Conflicts:	slmdm-usb
+Requires:	kernel-char-slmdm
+Conflicts:	kernel-char-slmdm-usb
 
 %description amr
 SmartLink Software Modem. HW drivers for HAMR5600 based
@@ -28,8 +28,8 @@ modem cards.
 %package usb
 Summary:	Smart Link Soft Modem USB component.
 Group:		Applications/Communications
-Requires:	slmdm
-Conflicts:	slmdm-amr
+Requires:	kernel-char-slmdm
+Conflicts:	kernel-char-slmdm-amr
 
 %description usb
 SmartLink Software Modem. HW driver for SmartUSB56 based USB modem.
@@ -41,7 +41,7 @@ SmartLink Software Modem. HW driver for SmartUSB56 based USB modem.
 
 %prep
 
-%setup -q
+%setup -q -n slmdm-%{version}
 
 %build
 %{__make} KERNEL_INCLUDES=%{_kernelsrcdir}
