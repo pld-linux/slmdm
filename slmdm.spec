@@ -122,8 +122,7 @@ if ! grep -q '^alias.*slmodem' %{modules_conf} ; then
 	echo 'alias char-major-212 slmodem' >> %modules_conf
 	echo 'alias slmodem off' >> %modules_conf
 fi
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
-
+%depmod %{_kernel_ver}
 
 %postun -n kernel-char-slmdm
 if [ "$1" = "0" ]; then
@@ -131,14 +130,14 @@ if [ "$1" = "0" ]; then
 	grep -v '^alias.*slmodem' %{modules_conf} %{modules_conf}.slmdm
 	mv -f %{modules_conf}.slmdm %{modules_conf}
 fi
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %post -n kernel-char-slmdm-amr
 umask 027
 sed -e 's/^alias slmodem .*$/alias slmodem slamrmo/' \
 	%{modules_conf} > %{modules_conf}.slusb
 mv -f %{modules_conf}.slusb %{modules_conf}
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %postun -n kernel-char-slmdm-amr
 if [ "$1" = "0" ]; then
@@ -147,14 +146,14 @@ if [ "$1" = "0" ]; then
 		%{modules_conf} > %{modules_conf}.slusb
 	mv -f %{modules_conf}.slusb %{modules_conf}
 fi
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %post -n kernel-char-slmdm-usb
 umask 027
 sed -e 's/^alias slmodem .*$/alias slmodem slusb/' \
 	%{modules_conf} > %{modules_conf}.slusb
 mv -f %{modules_conf}.slusb %{modules_conf}
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %postun -n kernel-char-slmdm-usb
 if [ "$1" = 0 ]; then
@@ -163,7 +162,7 @@ if [ "$1" = 0 ]; then
 		%{modules_conf} > %{modules_conf}.slusb
 	mv -f %{modules_conf}.slusb %{modules_conf}
 fi
-/sbin/depmod -a %{!?_without_dist_kernel:-F /boot/System.map-%{_kernel_ver} }%{_kernel_ver}
+%depmod %{_kernel_ver}
 
 %files 
 %defattr(644,root,root,755)
