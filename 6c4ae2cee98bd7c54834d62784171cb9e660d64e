@@ -1,0 +1,11 @@
+- updated to 2.7.14
+
++ Version 2.7.14
+        - V34/V90/V92 improvements.
+
++ Version 2.7.12
+        - V92 improvements.
+        - Support for ICH4.
+        - Support for SmartRiser561.
+        - Support for SmartRiser563.
+        - misc fixes.
