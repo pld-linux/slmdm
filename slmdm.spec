@@ -3,14 +3,16 @@
 Summary:	Smart Link soft modem drivers
 Summary(pl):	Sterowniki do modemów programowych Smart Link
 Name:		slmdm
-Version:	2.7.10
+Version:	2.7.14
 %define	rel	0.1
 Release:	%{rel}
 License:	BSD almost without source
 Vendor:		Smart Link Ltd.
 Group:		Base/Kernel
 # ftp://ftp.smlink.com/Update/linux/unsupported/ doesn't work
-Source0:	http://linmodems.technion.ac.il/packages/smartlink/%{name}-%{version}.tar.gz
+# http://linmodems.technion.ac.il/packages/smartlink/
+# http://www.smlink.com/download/Linux/
+Source0:	http://www.smlink.com/download/Linux/%{name}-%{version}.tar.gz
 Patch0:		%{name}-2.4.20.patch
 URL:		http://linmodems.technion.ac.il/resources.html
 %{!?_without_dist_kernel:BuildRequires:	kernel-headers}
@@ -89,11 +91,13 @@ pakiet zawiera sterownik dla modemów USB opartych  na SmartUSB56.
 %endif
 
 %build
+echo "[%{_kernel_ver}]"
 KI="%{_kernelsrcdir}/include"
 MV="-DMODVERSIONS --include ${KI}/linux/modversions.h"
 CF="-Wall %{rpmcflags} -fomit-frame-pointer"
 %{__make} \
 	CC="%{kgcc}" \
+	KERNEL_INCLUDES=%{_kernelsrcdir}/include \
 	CFLAGS="${CF} -D__KERNEL__ -DMODULE -DEXPORT_SYMTAB -I. -I${KI} ${MV}"
 
 %install
@@ -115,7 +119,8 @@ if ! grep -q '^alias.*slmodem' %{modules_conf} ; then
 	echo 'alias char-major-212 slmodem' >> %modules_conf
 	echo 'alias slmodem off' >> %modules_conf
 fi
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
+
 
 %postun -n kernel-char-slmdm
 if [ "$1" = "0" ]; then
@@ -123,14 +128,14 @@ if [ "$1" = "0" ]; then
 	grep -v '^alias.*slmodem' %{modules_conf} %{modules_conf}.slmdm
 	mv -f %{modules_conf}.slmdm %{modules_conf}
 fi
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 
 %post -n kernel-char-slmdm-amr
 umask 027
 sed -e 's/^alias slmodem .*$/alias slmodem slamrmo/' \
 	%{modules_conf} > %{modules_conf}.slusb
 mv -f %{modules_conf}.slusb %{modules_conf}
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 
 %postun -n kernel-char-slmdm-amr
 if [ "$1" = "0" ]; then
@@ -139,14 +144,14 @@ if [ "$1" = "0" ]; then
 		%{modules_conf} > %{modules_conf}.slusb
 	mv -f %{modules_conf}.slusb %{modules_conf}
 fi
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 
 %post -n kernel-char-slmdm-usb
 umask 027
 sed -e 's/^alias slmodem .*$/alias slmodem slusb/' \
 	%{modules_conf} > %{modules_conf}.slusb
 mv -f %{modules_conf}.slusb %{modules_conf}
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 
 %postun -n kernel-char-slmdm-usb
 if [ "$1" = 0 ]; then
@@ -155,7 +160,7 @@ if [ "$1" = 0 ]; then
 		%{modules_conf} > %{modules_conf}.slusb
 	mv -f %{modules_conf}.slusb %{modules_conf}
 fi
-/sbin/depmod -a
+/sbin/depmod -a -F /boot/System.map-%{_kernel_ver} %{_kernel_ver}
 
 %files 
 %defattr(644,root,root,755)
