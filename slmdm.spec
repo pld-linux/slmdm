@@ -87,7 +87,7 @@ driver for SmartUSB56 based USB modem.
 
 %description -n kernel-char-slmdm-usb -l pl
 Sterowniki j±dra Linuksa dla modemów programowych Smart Link. Ten
-pakiet zawiera sterownik dla modemów USB opartych  na SmartUSB56.
+pakiet zawiera sterownik dla modemów USB opartych na SmartUSB56.
 
 %prep
 %setup -q
