@@ -3,8 +3,8 @@
 Summary:	Smart Link soft modem drivers
 Summary(pl):	Sterowniki do modemów programowych Smart Link
 Name:		slmdm
-Version:	2.7.9
-%define	rel	0.2
+Version:	2.7.10
+%define	rel	0.1
 Release:	%{rel}
 License:	BSD almost without source
 Vendor:		Smart Link Ltd.
