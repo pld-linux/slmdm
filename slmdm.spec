@@ -1,5 +1,9 @@
 # NOTE: no SMP drivers for now - I don't know if these binaries would work?
 # TODO: test it on SMP and add SMP modules or update above comment
+# 
+# Conditional build:
+%bcond_without	dist_kernel	# without kernel from distribution
+#
 Summary:	Smart Link soft modem drivers
 Summary(pl):	Sterowniki do modemów programowych Smart Link
 Name:		slmdm
@@ -16,7 +20,7 @@ Source0:	http://www.smlink.com/main/down/%{name}-%{version}.tar.gz
 Patch0:		%{name}-2.4.20.patch
 Patch1:		%{name}-turnon-devfs.patch
 URL:		http://linmodems.technion.ac.il/resources.html
-%{!?_without_dist_kernel:BuildRequires:	kernel-headers}
+%{?with_dist_kernel:BuildRequires:	kernel-headers}
 BuildRequires:	%{kgcc_package}
 BuildRequires:	rpmbuild(macros) >= 1.118
 ExclusiveArch:	%{ix86}
@@ -35,7 +39,7 @@ Summary:	Linux kernel drivers for Smart Link soft modem
 Summary(pl):	Sterowniki j±dra Linuksa dla modemów programowych Smart Link
 Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_up}
+%{?with_dist_kernel:%requires_releq_kernel_up}
 Requires(post,postun):	/sbin/depmod
 Requires:	dev >= 2.8.0-31
 
@@ -50,7 +54,7 @@ Summary:	Linux kernel driver for Smart Link soft modem AMR/PCI component
 Summary(pl):	Sterownik j±dra Linuksa dla elementu AMR/PCI modemów programowych Smart Link
 Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_up}
+%{?with_dist_kernel:%requires_releq_kernel_up}
 Requires(post,postun):	/sbin/depmod
 Requires(post,postun):	kernel-char-slmdm
 Requires:	kernel-char-slmdm
@@ -71,7 +75,7 @@ Summary:	Linux kernel driver for Smart Link soft modem USB component
 Summary(pl):	Sterownik j±dra Linuksa dla elementu USB modemów programowych Smart Link
 Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_up}
+%{?with_dist_kernel:%requires_releq_kernel_up}
 Requires(post,postun):	/sbin/depmod
 Requires(post,postun):	kernel-char-slmdm
 Requires:	kernel-char-slmdm
