@@ -165,7 +165,7 @@ if [ "$1" = 0 ]; then
 fi
 %depmod %{_kernel_ver}
 
-%files 
+%files
 %defattr(644,root,root,755)
 %doc README COPYRIGHT FAQ Changes
 %attr(755,root,root) %{_bindir}/*
