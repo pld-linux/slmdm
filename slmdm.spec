@@ -11,8 +11,7 @@ Vendor:		Smart Link Ltd.
 Group:		Base/Kernel
 # ftp://ftp.smlink.com/Update/linux/unsupported/ doesn't work
 # http://linmodems.technion.ac.il/packages/smartlink/
-# http://www.smlink.com/download/Linux/
-Source0:	http://www.smlink.com/download/Linux/%{name}-%{version}.tar.gz
+Source0:	http://www.smlink.com/main/down/%{name}-%{version}.tar.gz
 # Source0-md5:	2fb4e60d46a55c8e6445600b4ce4e921
 Patch0:		%{name}-2.4.20.patch
 Patch1:		%{name}-turnon-devfs.patch
