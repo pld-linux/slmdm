@@ -1,0 +1,12 @@
+diff -urN slmdm-2.7.14.org/mdm_sltty.c slmdm-2.7.14/mdm_sltty.c
+--- slmdm-2.7.14.org/mdm_sltty.c	Sat May 10 13:50:22 2003
++++ slmdm-2.7.14/mdm_sltty.c	Sat May 10 18:41:12 2003
+@@ -801,7 +801,7 @@
+ 	sltty.init_termios = tty_std_termios;
+ 	sltty.init_termios.c_cflag =
+ 	    B115200 | CS8 | CREAD | HUPCL | CLOCAL;
+-	sltty.flags = TTY_DRIVER_REAL_RAW | TTY_DRIVER_NO_DEVFS;
++	sltty.flags = TTY_DRIVER_REAL_RAW;
+ 	sltty.refcount = &sltty_refcount;
+ 
+ 	sltty.table = &sltty_table;
