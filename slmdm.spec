@@ -1,79 +1,128 @@
 # NOTE: no SMP drivers for now - I don't know if these binaries would work?
 # TODO: test it on SMP and add SMP modules or update above comment
-Summary:	Smart Link soft modem drivers
-Summary(pl):	Sterowniki do modemów programowych Smart Link
+Summary:	Smart Link Soft Modem.
 Name:		slmdm
-Version:	2.6.16
-%define	_rel	1
-Release:	%{_rel}
-License:	BSD almost without source
-Group:		Base/Kernel
-Vendor:		Smart Link Ltd. <http://www.smlink.com/>
-Source0:	http://www.smlink.com/download/Linux/%{name}-%{version}.tar.gz
-Patch0:		%{name}-2.4.20.patch
-URL:		http://www.smlink.com/download/Linux/
-%{!?_without_dist_kernel:BuildRequires:	kernel-headers}
-BuildRequires:	%{kgcc_package}
-ExclusiveArch:	%{ix86}
+Vendor:		Smart Link Ltd.
+Version:	2.7.9
+Release:	0.1
+License:	Smart Link Ltd.
+Group:		Applications/Communications
+Source0:	%{name}-%{version}.tar.gz
+URL:		http://linmodems.technion.ac.al/resources.html
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-Smart Link soft modem drivers.
+SmartLink Software Modem.
 
-%description -l pl
-Sterowniki do modemów programowych Smart Link.
+%package amr
+Summary:	Smart Link Soft Modem AMR/PCI component.
+Group:		Applications/Communications
+Requires:	slmdm
+Conflicts:	slmdm-usb
 
-%package -n kernel-char-slmdm
-Summary:	Linux kernel drivers for Smart Link soft modem
-Summary(pl):	Sterowniki j±dra Linuksa dla modemów programowych Smart Link
-Release:	%{_rel}@%{_kernel_ver_str}
-Group:		Base/Kernel
-%{!?_without_dist_kernel:%requires_releq_kernel_up}
-Requires(post,postun):	/sbin/depmod
+%description amr
+SmartLink Software Modem. HW drivers for HAMR5600 based
+AMR/CNR/MDC/ACR modem cards and SmartPCI56, SmartPCI561 based PCI
+modem cards.
 
-%description -n kernel-char-slmdm
-Linux kernel drivers for Smart Link soft modem.
+%package usb
+Summary:	Smart Link Soft Modem USB component.
+Group:		Applications/Communications
+Requires:	slmdm
+Conflicts:	slmdm-amr
 
-%description -n kernel-char-slmdm -l pl
-Sterowniki j±dra Linuksa dla modemów programowych Smart Link.
+%description usb
+SmartLink Software Modem. HW driver for SmartUSB56 based USB modem.
+
+%define modules_conf /etc/modules.conf
+# Used at home...
+# %define _kernelsrcdir /usr/src/linux-2.4.20-wolk/include/
+# %define _kernel_ver 2.4.20-wolk
 
 %prep
+
 %setup -q
-# patch needed since vanilla 2.4.20 or PLD's 2.4.19-2.x
-%if %(grep -q urb_t %{_kernelsrcdir}/include/linux/usb.h ; echo $?)
-%patch -p1
-%endif
 
 %build
-KI="%{_kernelsrcdir}/include"
-MV="-DMODVERSIONS --include ${KI}/linux/modversions.h"
-CF="-Wall %{rpmcflags} -fomit-frame-pointer"
-%{__make} \
-	CC="%{kgcc}" \
-	CFLAGS="${CF} -D__KERNEL__ -DMODULE -DEXPORT_SYMTAB -I. -I${KI} ${MV}"
+%{__make} KERNEL_INCLUDES=%{_kernelsrcdir}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},/lib/modules/%{_kernel_ver}/misc}
+# We cannot do it this way - it requires root privileges at this stage (adamg)
+# %{__make} prefix_dir=$RPM_BUILD_ROOT install spec-file-lists
+install -dD $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
+install -dD $RPM_BUILD_ROOT/%{_sysconfdir}
+cp -f slmdm.o slusb.o slfax.o slamrmo.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
+cp -f country.dat $RPM_BUILD_ROOT%{_sysconfdir}/country.dat
 
-install slver $RPM_BUILD_ROOT%{_bindir}
-install slmdm.o slfax.o slamrmo.o slusb.o \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/misc
+%post
+if [ "$1" = 1 ] ; then
+	cp %modules_conf %modules_conf.slmdm && \
+	  grep -v 'slmodem' %modules_conf.slmdm > %modules_conf
+	echo 'alias char-major-212 slmodem' >> %modules_conf
+	echo 'alias slmodem off' >> %modules_conf
+fi
+depmod -a
+mknod -m 666 /dev/ttySL0 -c 212 0
+ln -sf /dev/ttySL0 /dev/modem
+
+%post usb
+cp %modules_conf %modules_conf.slusb && \
+  sed -e 's/^alias slmodem .*$/alias slmodem slusb/' %modules_conf.slusb > %modules_conf
+depmod -a
+
+%post amr
+cp %modules_conf %modules_conf.slamr && \
+ sed -e 's/^alias slmodem .*$/alias slmodem slamrmo/' %modules_conf.slamr > %modules_conf
+depmod -a
+
+%postun usb
+modprobe -r slusb
+modprobe -r slfax
+modprobe -r slmdm
+if [ "$1" = 0 ]; then
+	cp %modules_conf %modules_conf.slusb && \
+	  sed -e 's/^alias slmodem slusb$/alias slmodem off/' %modules_conf.slusb > %modules_conf
+fi
+depmod -a
+
+%postun amr
+modprobe -r slamrmo
+modprobe -r slfax
+modprobe -r slmdm
+if [ "$1" = 0 ]; then
+	cp %modules_conf %modules_conf.slamr && \
+	  sed -e 's/^alias slmodem slamrmo$/alias slmodem off/' %modules_conf.slamr > %modules_conf
+fi
+depmod -a
+
+%preun
+modprobe -r slamrmo
+modprobe -r slusb
+modprobe -r slfax
+modprobe -r slmdm
+if [ "$1" = 0 ]; then
+	cp %modules_conf %modules_conf.slmdm && \
+	grep -v 'slmodem' %modules_conf.slmdm > %modules_conf
+	rm -f /var/lib/slmdm.data
+fi
+depmod -a
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	-n kernel-char-slmdm
-/sbin/depmod -a
-
-%postun	-n kernel-char-slmdm
-/sbin/depmod -a
-
-%files
+%files 
 %defattr(644,root,root,755)
-%doc COPYRIGHT Changes FAQ README
-%attr(755,root,root) %{_bindir}/*
+%attr(0644,root,root) /lib/modules/%{_kernel_ver}/misc/slmdm.o.gz
+%attr(0644,root,root) /lib/modules/%{_kernel_ver}/misc/slfax.o.gz
+#/dev/ttySL0
+%config %{_sysconfdir}/country.dat
+%doc README COPYRIGHT FAQ Changes
 
-%files -n kernel-char-slmdm
+%files amr 
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/misc/*.o*
+%attr(0644,root,root) /lib/modules/%{_kernel_ver}/misc/slamrmo.o.gz
+
+%files usb 
+%defattr(644,root,root,755)
+%attr(0644,root,root) /lib/modules/%{_kernel_ver}/misc/slusb.o.gz
