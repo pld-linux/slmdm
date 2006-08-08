@@ -93,7 +93,7 @@ pakiet zawiera sterownik dla modemów USB opartych na SmartUSB56.
 %setup -q
 # patch needed since vanilla 2.4.20 or PLD's 2.4.19-2.x
 %if %(grep -q iso_packet_descriptor_t %{_kernelsrcdir}/include/linux/usb.h ; echo $?)
-%patch -p1
+%patch0 -p1
 %endif
 %patch1 -p1
 
