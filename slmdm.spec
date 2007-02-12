@@ -5,7 +5,7 @@
 %bcond_without	dist_kernel	# without kernel from distribution
 #
 Summary:	Smart Link soft modem drivers
-Summary(pl.UTF-8):   Sterowniki do modemów programowych Smart Link
+Summary(pl.UTF-8):	Sterowniki do modemów programowych Smart Link
 Name:		slmdm
 Version:	2.7.14
 %define	rel	0.2
@@ -36,7 +36,7 @@ Sterowniki do modemów programowych Smart Link.
 
 %package -n kernel-char-slmdm
 Summary:	Linux kernel drivers for Smart Link soft modem
-Summary(pl.UTF-8):   Sterowniki jądra Linuksa dla modemów programowych Smart Link
+Summary(pl.UTF-8):	Sterowniki jądra Linuksa dla modemów programowych Smart Link
 Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -51,7 +51,7 @@ Sterowniki jądra Linuksa dla modemów programowych Smart Link.
 
 %package -n kernel-char-slmdm-amr
 Summary:	Linux kernel driver for Smart Link soft modem AMR/PCI component
-Summary(pl.UTF-8):   Sterownik jądra Linuksa dla elementu AMR/PCI modemów programowych Smart Link
+Summary(pl.UTF-8):	Sterownik jądra Linuksa dla elementu AMR/PCI modemów programowych Smart Link
 Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
@@ -72,7 +72,7 @@ AMR/CNR/MDC/ACR oraz kart PCI SmartPCI56 i SmartPCI561.
 
 %package -n kernel-char-slmdm-usb
 Summary:	Linux kernel driver for Smart Link soft modem USB component
-Summary(pl.UTF-8):   Sterownik jądra Linuksa dla elementu USB modemów programowych Smart Link
+Summary(pl.UTF-8):	Sterownik jądra Linuksa dla elementu USB modemów programowych Smart Link
 Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
